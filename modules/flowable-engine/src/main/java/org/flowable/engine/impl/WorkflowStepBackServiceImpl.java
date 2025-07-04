@@ -61,7 +61,7 @@ public class WorkflowStepBackServiceImpl extends CommonServiceImpl<ProcessEngine
             
             // Validate task keys exist in process definition
             WorkflowStepBackUtils.validateStepBackParametersWithProcessDefinition(
-                processInstanceId, currentTaskKey, targetTaskKey, processDefinition);
+                processInstanceId, currentTaskKey, targetTaskKey, configuration.getRepositoryService(), processDefinition);
         }
         
         // Perform the actual step back operation

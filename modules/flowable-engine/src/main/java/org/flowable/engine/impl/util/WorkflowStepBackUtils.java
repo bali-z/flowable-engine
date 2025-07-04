@@ -17,7 +17,7 @@ import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.FlowElement;
 import org.flowable.bpmn.model.Process;
 import org.flowable.common.engine.api.FlowableIllegalArgumentException;
-import org.flowable.engine.ProcessEngineConfiguration;
+import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.ProcessDefinition;
 
 /**
@@ -48,12 +48,14 @@ public class WorkflowStepBackUtils {
      * @param processInstanceId the process instance ID
      * @param currentTaskKey the current task key
      * @param targetTaskKey the target task key to step back to
+     * @param repositoryService the repository service to get BPMN model
      * @param processDefinition the process definition to validate task keys against
      * @throws FlowableIllegalArgumentException if any validation fails
      */
     public static void validateStepBackParametersWithProcessDefinition(String processInstanceId, 
                                                                        String currentTaskKey, 
                                                                        String targetTaskKey, 
+                                                                       RepositoryService repositoryService,
                                                                        ProcessDefinition processDefinition) {
         validateStepBackParameters(processInstanceId, currentTaskKey, targetTaskKey);
         
@@ -63,9 +65,14 @@ public class WorkflowStepBackUtils {
             );
         }
         
+        if (repositoryService == null) {
+            throw new FlowableIllegalArgumentException(
+                "Repository service cannot be null / 仓库服务不能为空"
+            );
+        }
+        
         // Get the BPMN model to validate task keys
-        ProcessEngineConfiguration processEngineConfiguration = CommandContextUtil.getProcessEngineConfiguration();
-        BpmnModel bpmnModel = processEngineConfiguration.getRepositoryService().getBpmnModel(processDefinition.getId());
+        BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinition.getId());
         
         validateTaskKeyExistsInProcessDefinition(currentTaskKey, bpmnModel, "Current task key");
         validateTaskKeyExistsInProcessDefinition(targetTaskKey, bpmnModel, "Target task key");
