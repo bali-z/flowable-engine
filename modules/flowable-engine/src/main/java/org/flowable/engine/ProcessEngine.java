@@ -62,5 +62,7 @@ public interface ProcessEngine extends Engine {
 
     ProcessMigrationService getProcessMigrationService();
 
+    WorkflowStepBackService getWorkflowStepBackService();
+
     ProcessEngineConfiguration getProcessEngineConfiguration();
 }

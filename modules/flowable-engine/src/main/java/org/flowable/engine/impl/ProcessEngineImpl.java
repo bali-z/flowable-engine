@@ -31,6 +31,7 @@ import org.flowable.engine.ProcessMigrationService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
+import org.flowable.engine.WorkflowStepBackService;
 import org.flowable.engine.delegate.event.impl.FlowableEventBuilder;
 import org.flowable.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.flowable.job.service.impl.asyncexecutor.AsyncExecutor;
@@ -54,6 +55,7 @@ public class ProcessEngineImpl implements ProcessEngine {
     protected ManagementService managementService;
     protected DynamicBpmnService dynamicBpmnService;
     protected ProcessMigrationService processInstanceMigrationService;
+    protected WorkflowStepBackService workflowStepBackService;
     protected AsyncExecutor asyncExecutor;
     protected AsyncExecutor asyncHistoryExecutor;
     protected CommandExecutor commandExecutor;
@@ -73,6 +75,7 @@ public class ProcessEngineImpl implements ProcessEngine {
         this.managementService = processEngineConfiguration.getManagementService();
         this.dynamicBpmnService = processEngineConfiguration.getDynamicBpmnService();
         this.processInstanceMigrationService = processEngineConfiguration.getProcessMigrationService();
+        this.workflowStepBackService = processEngineConfiguration.getWorkflowStepBackService();
         this.asyncExecutor = processEngineConfiguration.getAsyncExecutor();
         this.asyncHistoryExecutor = processEngineConfiguration.getAsyncHistoryExecutor();
         this.commandExecutor = processEngineConfiguration.getCommandExecutor();
@@ -189,6 +192,11 @@ public class ProcessEngineImpl implements ProcessEngine {
     @Override
     public ProcessMigrationService getProcessMigrationService() {
         return processInstanceMigrationService;
+    }
+
+    @Override
+    public WorkflowStepBackService getWorkflowStepBackService() {
+        return workflowStepBackService;
     }
 
     @Override

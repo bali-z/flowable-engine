@@ -135,6 +135,7 @@ import org.flowable.engine.ProcessMigrationService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
+import org.flowable.engine.WorkflowStepBackService;
 import org.flowable.engine.app.AppResourceConverter;
 import org.flowable.engine.compatibility.DefaultFlowable5CompatibilityHandlerFactory;
 import org.flowable.engine.compatibility.Flowable5CompatibilityHandler;
@@ -156,6 +157,7 @@ import org.flowable.engine.impl.RepositoryServiceImpl;
 import org.flowable.engine.impl.RuntimeServiceImpl;
 import org.flowable.engine.impl.SchemaOperationProcessEngineClose;
 import org.flowable.engine.impl.TaskServiceImpl;
+import org.flowable.engine.impl.WorkflowStepBackServiceImpl;
 import org.flowable.engine.impl.agenda.AgendaSessionFactory;
 import org.flowable.engine.impl.agenda.DefaultFlowableEngineAgendaFactory;
 import org.flowable.engine.impl.app.AppDeployer;
@@ -451,6 +453,7 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
     protected ManagementService managementService = new ManagementServiceImpl(this);
     protected DynamicBpmnService dynamicBpmnService = new DynamicBpmnServiceImpl(this);
     protected ProcessMigrationService processInstanceMigrationService = new ProcessMigrationServiceImpl(this);
+    protected WorkflowStepBackService workflowStepBackService = new WorkflowStepBackServiceImpl(this);
 
     // IDM ENGINE /////////////////////////////////////////////////////
     protected boolean disableIdmEngine;
@@ -2794,6 +2797,14 @@ public abstract class ProcessEngineConfigurationImpl extends ProcessEngineConfig
 
     public void setProcessInstanceMigrationService(ProcessMigrationService processInstanceMigrationService) {
         this.processInstanceMigrationService = processInstanceMigrationService;
+    }
+
+    public WorkflowStepBackService getWorkflowStepBackService() {
+        return workflowStepBackService;
+    }
+
+    public void setWorkflowStepBackService(WorkflowStepBackService workflowStepBackService) {
+        this.workflowStepBackService = workflowStepBackService;
     }
 
     @Override
