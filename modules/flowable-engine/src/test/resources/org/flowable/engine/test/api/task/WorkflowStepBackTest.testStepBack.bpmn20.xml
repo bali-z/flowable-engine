@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="stepBackProcess" name="Step Back Test Process" isExecutable="true">
+    <documentation>Simple process for testing step back functionality</documentation>
+    <startEvent id="startEvent" name="Start"/>
+    <sequenceFlow id="flow1" sourceRef="startEvent" targetRef="task1"/>
+    <userTask id="task1" name="Task 1" flowable:assignee="user1"/>
+    <sequenceFlow id="flow2" sourceRef="task1" targetRef="task2"/>
+    <userTask id="task2" name="Task 2" flowable:assignee="user2"/>
+    <sequenceFlow id="flow3" sourceRef="task2" targetRef="endEvent"/>
+    <endEvent id="endEvent" name="End"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_stepBackProcess">
+    <bpmndi:BPMNPlane bpmnElement="stepBackProcess" id="BPMNPlane_stepBackProcess">
+      <bpmndi:BPMNShape bpmnElement="startEvent" id="BPMNShape_startEvent">
+        <omgdc:Bounds height="35.0" width="35.0" x="50.0" y="50.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task1" id="BPMNShape_task1">
+        <omgdc:Bounds height="80.0" width="100.0" x="150.0" y="27.5"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task2" id="BPMNShape_task2">
+        <omgdc:Bounds height="80.0" width="100.0" x="300.0" y="27.5"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endEvent" id="BPMNShape_endEvent">
+        <omgdc:Bounds height="35.0" width="35.0" x="450.0" y="50.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="85.0" y="67.5"/>
+        <omgdi:waypoint x="150.0" y="67.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="250.0" y="67.5"/>
+        <omgdi:waypoint x="300.0" y="67.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="400.0" y="67.5"/>
+        <omgdi:waypoint x="450.0" y="67.5"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
