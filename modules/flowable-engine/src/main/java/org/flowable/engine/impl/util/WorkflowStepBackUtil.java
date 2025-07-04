@@ -371,38 +371,41 @@ public class WorkflowStepBackUtil {
 
         lock.readLock().lock();
         try {
-            RuntimeService runtimeService = processEngineConfiguration.getRuntimeService();
-            
-            // Get process definition through process instance
-            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
-                .processInstanceId(processInstanceId)
-                .singleResult();
-            
-            if (processInstance == null) {
-                throw new FlowableException("Process instance with id '" + processInstanceId + "' not found");
-            }
-
-            Process process = ProcessDefinitionUtil.getProcess(processInstance.getProcessDefinitionId());
-            FlowElement flowElement = process.getFlowElement(activityId, true);
-            
-            if (flowElement == null) {
-                throw new FlowableException("Activity with id '" + activityId + "' not found in process");
-            }
-
-            // Check if activity is in subprocess
-            if (process.findParent(flowElement) instanceof SubProcess) {
-                return ProcessType.SUBPROCESS;
-            }
-
-            // Check if activity has parallel gateway connections
-            if (flowElement instanceof FlowNode) {
-                FlowNode flowNode = (FlowNode) flowElement;
-                if (hasParallelGatewayConnections(flowNode)) {
-                    return ProcessType.PARALLEL_GATEWAY;
+            // Execute within a command context to ensure proper access to process definition
+            return processEngineConfiguration.getCommandExecutor().execute(commandContext -> {
+                RuntimeService runtimeService = processEngineConfiguration.getRuntimeService();
+                
+                // Get process definition through process instance
+                ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                    .processInstanceId(processInstanceId)
+                    .singleResult();
+                
+                if (processInstance == null) {
+                    throw new FlowableException("Process instance with id '" + processInstanceId + "' not found");
                 }
-            }
 
-            return ProcessType.SEQUENTIAL;
+                Process process = ProcessDefinitionUtil.getProcess(processInstance.getProcessDefinitionId());
+                FlowElement flowElement = process.getFlowElement(activityId, true);
+                
+                if (flowElement == null) {
+                    throw new FlowableException("Activity with id '" + activityId + "' not found in process");
+                }
+
+                // Check if activity is in subprocess
+                if (process.findParent(flowElement) instanceof SubProcess) {
+                    return ProcessType.SUBPROCESS;
+                }
+
+                // Check if activity has parallel gateway connections
+                if (flowElement instanceof FlowNode) {
+                    FlowNode flowNode = (FlowNode) flowElement;
+                    if (hasParallelGatewayConnections(flowNode)) {
+                        return ProcessType.PARALLEL_GATEWAY;
+                    }
+                }
+
+                return ProcessType.SEQUENTIAL;
+            });
             
         } finally {
             lock.readLock().unlock();
@@ -491,8 +494,10 @@ public class WorkflowStepBackUtil {
             info.put("execution", execution);
             
             // Get process type
-            ProcessType processType = determineProcessType(currentTask.getProcessInstanceId(), 
-                                                         currentTask.getTaskDefinitionKey(), processEngineConfiguration);
+            ProcessType processType = processEngineConfiguration.getCommandExecutor().execute(commandContext -> {
+                return determineProcessType(currentTask.getProcessInstanceId(), 
+                                          currentTask.getTaskDefinitionKey(), processEngineConfiguration);
+            });
             info.put("processType", processType);
             
             return info;
