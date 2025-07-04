@@ -34,6 +34,7 @@ import org.flowable.engine.impl.cmd.AddEventConsumerCommand;
 import org.flowable.engine.impl.cmd.AddEventListenerCommand;
 import org.flowable.engine.impl.cmd.AddIdentityLinkForProcessInstanceCmd;
 import org.flowable.engine.impl.cmd.AddMultiInstanceExecutionCmd;
+import org.flowable.engine.impl.cmd.CanPerformAutomaticStepBackCmd;
 import org.flowable.engine.impl.cmd.ChangeActivityStateCmd;
 import org.flowable.engine.impl.cmd.CompleteAdhocSubProcessCmd;
 import org.flowable.engine.impl.cmd.DeleteIdentityLinkForProcessInstanceCmd;
@@ -60,12 +61,14 @@ import org.flowable.engine.impl.cmd.GetExecutionVariableInstancesCmd;
 import org.flowable.engine.impl.cmd.GetExecutionVariablesCmd;
 import org.flowable.engine.impl.cmd.GetExecutionsVariablesCmd;
 import org.flowable.engine.impl.cmd.GetIdentityLinksForProcessInstanceCmd;
+import org.flowable.engine.impl.cmd.GetPossibleStepBackTargetsCmd;
 import org.flowable.engine.impl.cmd.GetProcessInstanceEventsCmd;
 import org.flowable.engine.impl.cmd.GetStartFormCmd;
 import org.flowable.engine.impl.cmd.GetStartFormModelCmd;
 import org.flowable.engine.impl.cmd.HasExecutionVariableCmd;
 import org.flowable.engine.impl.cmd.MessageEventReceivedCmd;
 import org.flowable.engine.impl.cmd.ModifyProcessInstanceStartEventSubscriptionCmd;
+import org.flowable.engine.impl.cmd.PerformAutomaticStepBackCmd;
 import org.flowable.engine.impl.cmd.RegisterProcessInstanceStartEventSubscriptionCmd;
 import org.flowable.engine.impl.cmd.RemoveEventConsumerCommand;
 import org.flowable.engine.impl.cmd.RemoveEventListenerCommand;
@@ -831,6 +834,26 @@ public class RuntimeServiceImpl extends CommonEngineServiceImpl<ProcessEngineCon
     @Override
     public ChangeActivityStateBuilder createChangeActivityStateBuilder() {
         return new ChangeActivityStateBuilderImpl(this);
+    }
+
+    @Override
+    public String performAutomaticStepBack(String currentTaskId, String processInstanceId) {
+        return commandExecutor.execute(new PerformAutomaticStepBackCmd(currentTaskId, processInstanceId, null));
+    }
+
+    @Override
+    public String performAutomaticStepBack(String currentTaskId, String processInstanceId, Map<String, Object> variables) {
+        return commandExecutor.execute(new PerformAutomaticStepBackCmd(currentTaskId, processInstanceId, variables));
+    }
+
+    @Override
+    public boolean canPerformAutomaticStepBack(String currentTaskId, String processInstanceId) {
+        return commandExecutor.execute(new CanPerformAutomaticStepBackCmd(currentTaskId, processInstanceId));
+    }
+
+    @Override
+    public List<String> getPossibleStepBackTargets(String currentTaskId, String processInstanceId) {
+        return commandExecutor.execute(new GetPossibleStepBackTargetsCmd(currentTaskId, processInstanceId));
     }
 
     @Override

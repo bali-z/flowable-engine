@@ -1497,6 +1497,46 @@ public interface RuntimeService {
     ChangeActivityStateBuilder createChangeActivityStateBuilder();
 
     /**
+     * Performs an automatic step back operation from the current task to the most appropriate previous task.
+     * This method automatically determines the target task without requiring explicit specification.
+     * 
+     * @param currentTaskId the current task to step back from
+     * @param processInstanceId the process instance ID
+     * @return the ID of the task that was stepped back to
+     */
+    String performAutomaticStepBack(String currentTaskId, String processInstanceId);
+
+    /**
+     * Performs an automatic step back operation from the current task to the most appropriate previous task.
+     * This method automatically determines the target task without requiring explicit specification.
+     * 
+     * @param currentTaskId the current task to step back from
+     * @param processInstanceId the process instance ID
+     * @param variables optional variables to set during step back
+     * @return the ID of the task that was stepped back to
+     */
+    String performAutomaticStepBack(String currentTaskId, String processInstanceId, Map<String, Object> variables);
+
+    /**
+     * Validates whether an automatic step back is possible for the given task.
+     * 
+     * @param currentTaskId the current task ID
+     * @param processInstanceId the process instance ID
+     * @return true if automatic step back is possible, false otherwise
+     */
+    boolean canPerformAutomaticStepBack(String currentTaskId, String processInstanceId);
+
+    /**
+     * Gets the list of possible previous tasks for step back.
+     * This method can be used to provide users with options for manual step back.
+     * 
+     * @param currentTaskId the current task ID
+     * @param processInstanceId the process instance ID
+     * @return list of previous task IDs that can be used for step back
+     */
+    List<String> getPossibleStepBackTargets(String currentTaskId, String processInstanceId);
+
+    /**
      * Adds a new execution to a running multi-instance parent execution
      *
      * @param activityId
